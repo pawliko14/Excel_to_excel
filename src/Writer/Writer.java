@@ -23,15 +23,12 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 
 import Reader.ExcelReader;
 import Reader.excel_object;
-import Reader.ExcelReader.IrekExcelColumnName;
 import parameters.Parameters;
 
-import java.lang.reflect.Field; 
 
 /**
  * This program illustrates how to update an existing Microsoft Excel document.
@@ -42,8 +39,8 @@ import java.lang.reflect.Field;
  */
 public class Writer {
 	
-	  public static final String SAMPLE_XLSX_FILE_PATH = "C:\\Users\\el08\\Desktop\\Irek_exel\\WYSY£KI MASZYN.xls";
-	  public static final String PATH_TO_FOLDER = "C:\\Users\\el08\\Desktop\\Irek_exel\\";
+//	  public static final String SAMPLE_XLSX_FILE_PATH = "C:\\Users\\el08\\Desktop\\Irek_exel\\WYSY£KI MASZYN.xls";
+//	  public static final String PATH_TO_FOLDER = "C:\\Users\\el08\\Desktop\\Irek_exel\\";
 	  
 	    private static List<excel_object> objects = new ArrayList<>();
 
@@ -79,12 +76,6 @@ public class Writer {
 	    
 	    
 	    
-	    public void CopyLastRow(Sheet sheet, Workbook wb)
-	    {
-	    	
-	    }
-	
-	    
 	    public void write(String data)
 	    {				  
 	            try {
@@ -107,6 +98,9 @@ public class Writer {
 	                Sheet sheet = workbook.getSheetAt(0);          
 	                
 	                
+	                
+	            //    List<Cell> cells =  GetLastRow_new_version_3rd_version();
+	                
 	                int rowCount = GetAllWrittenRows(sheet, workbook);            
 	   
 	                System.out.println("Row count: " + rowCount);
@@ -114,7 +108,6 @@ public class Writer {
 	                
 	           
 	                
-	             //   System.exit(0);
 	                
 	                for(int j = 0 ;  j < objects.size()-1 ; j++)
 	                {
@@ -208,14 +201,13 @@ public class Writer {
 	                }
 	                
 	                
-	                // to test
-		              List<Cell> cells =   GetLastRow_new_version_3rd_version();
+	       
 		              
-		              System.out.println("passed cell list: ");
-		              for(Cell c : cells)
-		              {
-		            	  System.out.println(c.getCellFormula());
-		              }
+//		              System.out.println("passed cell list: ");
+//		              for(Cell c : cells)
+//		              {
+//		            	  System.out.println(c.getCellFormula());
+//		              }
 	                
 	                
 	     
@@ -238,9 +230,9 @@ public class Writer {
 	public static void main(String[] args) throws EncryptedDocumentException, InvalidFormatException, IOException {
 		
 		// to tests but function need to be static
-		 Writer w = new Writer();
-		 w.RemoveRows(w.getSheet());
-		 w.write("02.2019");
+//		 Writer w = new Writer();
+//		 w.RemoveRows(w.getSheet());
+//		 w.write("02.2019");
 		 
 		// System.out.println("methods(without get) : " );
 		
@@ -291,143 +283,99 @@ public class Writer {
 
 	
 
-//	
-//	public static void GetLastRow_new_version() throws EncryptedDocumentException, InvalidFormatException, IOException
-//	{
-//		System.out.println("GetLastRow begin: ");
-//        
-//    	List<String> ListOfCellsInRow = new ArrayList<String>();		
-//    	List<CellStyle> CellStyleList = new ArrayList<CellStyle>();
-//  	
-//		 FileInputStream inputStream = new FileInputStream(new File(Parameters.getPathToIrekFileBackup()));
-//		 	Workbook workbook = WorkbookFactory.create(inputStream);
-//
-//
-//        Sheet sheet = workbook.getSheetAt(0); // first shieet
-//
-//
-//        DataFormatter formatter = new DataFormatter();
-//        
-//        int rowCount = sheet.getLastRowNum();
-//        
-//        for(int i = 0 ; i < 10 ; i++)
-//        {
-//        	String value_of_cell = formatter.formatCellValue(workbook.getSheetAt(0).getRow(rowCount).getCell(i));
-// 	
-//        	ListOfCellsInRow.add(value_of_cell);
-//        	
-//        	CellStyle newCellStyle = workbook.createCellStyle();
-//        	if(workbook.getSheetAt(0).getRow(rowCount).getCell(i) != null)
-//        		newCellStyle.cloneStyleFrom(workbook.getSheetAt(0).getRow(rowCount).getCell(i).getCellStyle());
-//        		CellStyleList.add(newCellStyle);
-//        	
-//        }
-//        
-//
-//        
-//        removeRow(sheet, rowCount);
-//        
-//      
-//        
-//        Row row = sheet.createRow(sheet.getLastRowNum()+5);
-//               
-//        int columnCount = 0;
-//        for(int i = 0 ; i < ListOfCellsInRow.size(); i++)
-//        {
-//      	  Cell cell = row.createCell(columnCount++);   
-//      	  cell.setCellStyle(CellStyleList.get(i));
-//        	  cell.setCellFormula( ListOfCellsInRow.get(i) );   
-//        }
-//		
-//        
-//        System.out.println("End of function");
-//        
-//        inputStream.close();
-//
-//        FileOutputStream outputStream = new FileOutputStream(Parameters.getPathToIrekFileBackup());
-//        workbook.write(outputStream);
-//        workbook.close();
-//        outputStream.close();
-//                
-//	}	
-//	
+	
+	public void PushSavedRow(List<Cell> cells, Workbook wb, Sheet sheet) throws IOException
+	{
+		System.out.println("Push to last row has begun");
+		
+		 FileInputStream inputStream = new FileInputStream(new File(Parameters.getPathToIrekFileBackup()));
+
+		
+		sheet = wb.getSheetAt(0);
+		
+		   Row row = sheet.createRow(sheet.getLastRowNum()+2);
+           
+	        int columnCount = 0;
+	        for(int i = 0 ; i < cells.size(); i++)
+	        {
+	      	    Cell cell = row.createCell(columnCount++);   
+	      	  	cell = cells.get(i);
+	        }
+	        
+	        inputStream.close();
+
+	        FileOutputStream outputStream = new FileOutputStream(Parameters.getPathToIrekFileBackup());
+	        wb.write(outputStream);
+	        wb.close();
+	        outputStream.close();
+	        
+			System.out.println("End of pushing");
+
+		
+	}
 	
 	public static List<Cell> GetLastRow_new_version_3rd_version() throws EncryptedDocumentException, InvalidFormatException, IOException
 	{
+		int HowManyCellsInTheRow = 10;
+		int SpaceBettwenLastRow = 2;
+		int SheetNumeber = 0;
+		
+		
 		System.out.println("GetLastRow begin: ");
         
     	List<String> ListOfCellsInRow = new ArrayList<String>();		
     	List<CellStyle> CellStyleList = new ArrayList<CellStyle>();
-    	
     	List<Cell> Cells = new ArrayList<Cell>();
   	
 		 FileInputStream inputStream = new FileInputStream(new File(Parameters.getPathToIrekFileBackup()));
 		 	Workbook workbook = WorkbookFactory.create(inputStream);
 
 
-        Sheet sheet = workbook.getSheetAt(0); // first shieet
+        Sheet sheet = workbook.getSheetAt(SheetNumeber); 
 
 
-        DataFormatter formatter = new DataFormatter();
-        
+        DataFormatter formatter = new DataFormatter(); 
         int rowCount = sheet.getLastRowNum();
         
-        for(int i = 0 ; i < 10 ; i++)
+        
+        // get row 
+        for(int i = 0 ; i < HowManyCellsInTheRow ; i++)
         {
-        	String value_of_cell = formatter.formatCellValue(workbook.getSheetAt(0).getRow(rowCount).getCell(i));
+        	String value_of_cell = formatter.formatCellValue(workbook.getSheetAt(SheetNumeber).getRow(rowCount).getCell(i));
  	
         	ListOfCellsInRow.add(value_of_cell);
         	
         	CellStyle newCellStyle = workbook.createCellStyle();
-        	if(workbook.getSheetAt(0).getRow(rowCount).getCell(i) != null)
-        		newCellStyle.cloneStyleFrom(workbook.getSheetAt(0).getRow(rowCount).getCell(i).getCellStyle());
+        	if(workbook.getSheetAt(SheetNumeber).getRow(rowCount).getCell(i) != null)
+        		newCellStyle.cloneStyleFrom(workbook.getSheetAt(SheetNumeber).getRow(rowCount).getCell(i).getCellStyle());
         		CellStyleList.add(newCellStyle);
-        		
-        
-        	
+        		    	
         }
         
 
-        
+        // remowe row
         removeRow(sheet, rowCount);
         
       
-        
-        Row row = sheet.createRow(sheet.getLastRowNum()+2);
-               
+        //insert to sheet
+        Row row = sheet.createRow(sheet.getLastRowNum()+ SpaceBettwenLastRow); 
         int columnCount = 0;
         for(int i = 0 ; i < ListOfCellsInRow.size(); i++)
         {
       	  Cell cell = row.createCell(columnCount++);   
       	  cell.setCellStyle(CellStyleList.get(i));
-         cell.setCellFormula( ListOfCellsInRow.get(i) );   
+          cell.setCellFormula( ListOfCellsInRow.get(i) );   
         	  
         	  Cells.add(cell);
         }
         
         
-//		for(Cell c : Cells)
-//		{
-//			if(c.getCellTypeEnum() == CellType.STRING)
-//			{
-//				System.out.println("values: " + c.getStringCellValue());
-//			}
-//			else if(c.getCellTypeEnum() == CellType.NUMERIC)
-//			{
-//				System.out.println("values: " + c.getNumericCellValue());
-//
-//			}
-//			else if(c.getCellTypeEnum() == CellType.FORMULA)
-//			{
-//				System.out.println("values: " + c.getCellFormula());
-//
-//			}
-//		}
+        PrintCellInArray(Cells);
+
         
         System.out.println("End of function");
         
         inputStream.close();
-
         FileOutputStream outputStream = new FileOutputStream(Parameters.getPathToIrekFileBackup());
         workbook.write(outputStream);
         workbook.close();
@@ -438,6 +386,18 @@ public class Writer {
 	}	
 	
 	
+	private static void PrintCellInArray(List<Cell> Cells)
+	{
+		for(Cell c : Cells)
+		{
+			if(c.getCellTypeEnum() == CellType.STRING)
+				System.out.println("values: " + c.getStringCellValue());
+			else if(c.getCellTypeEnum() == CellType.NUMERIC)
+				System.out.println("values: " + c.getNumericCellValue());
+			else if(c.getCellTypeEnum() == CellType.FORMULA)
+				System.out.println("values: " + c.getCellFormula());
+		}
+	}
 	
 	
 	

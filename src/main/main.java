@@ -15,11 +15,11 @@ public class main {
 		Writer write = new Writer();
 		
 		write.RemoveRows(write.getSheet());
-		write.write("02.2019");
+//		write.write("03.2019");
 		
-;
+
 //		write.write("04.2019"); // error because rows are empty for this month
-//		write.write("05.2019");
+		write.write("02.2019");
 
 			
 		

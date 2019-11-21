@@ -16,9 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExcelReader {
-	
- //   public static final String SAMPLE_XLSX_FILE_PATH = "C:\\Users\\el08\\Desktop\\Irek_exel\\WYSY£KI MASZYN.xls";
-    public static final String PATH_TO_FOLDER = "C:\\Users\\el08\\Desktop\\Irek_exel\\"; 
+	 
     private static List<excel_object> objects = new ArrayList<>();
 
     public static void main(String[] args) throws IOException, InvalidFormatException {
@@ -28,10 +26,7 @@ public class ExcelReader {
     	read.Read_from_file("02.2019");
 
     }
-    
-    // enum are not in use yet, since its not necessary in this etap
-    // anyway should be used for better code review
-    
+        
     public enum IrekExcelColumnName
     {
 
@@ -122,25 +117,24 @@ public class ExcelReader {
     
     public List<excel_object> Read_from_file(String dateMonth_to_retrive) throws IOException, EncryptedDocumentException, InvalidFormatException
     {
-  	
+    	int index_of_the_sheet = 0;
+    	int beginning_row = 3;
+    	int ending_row = 19;
     	
-    	List<String> ListOfSheets = ReadHowManySheetsInIzasFile();
-    	
-    //	PrintStream fileout = new PrintStream(PATH_TO_FOLDER + "LogFile.txt");
-    	
+    	List<String> ListOfSheets = ReadHowManySheetsInIzasFile();  
 
         // Creating a Workbook from an Excel file (.xls or .xlsx)
         Workbook workbook = WorkbookFactory.create(new File(Parameters.getSampleXlsxFilePath()));
 
-        int index_of_sheet_02_2019 = 0;
+        
         
        for(int i = 0 ; i < ListOfSheets.size() ; i++)
        {
     	   if(ListOfSheets.get(i).equals(dateMonth_to_retrive))
-    			   index_of_sheet_02_2019 = i;
+    			   index_of_the_sheet = i;
        }
        
-        int sheet_number = index_of_sheet_02_2019;
+        int sheet_number = index_of_the_sheet;
         int biggestValue_previous = 0 ; // it means how many machines has been sold in this month
         int biggestValue = 0 ; // it means how many machines has been sold in this month
 
@@ -148,7 +142,7 @@ public class ExcelReader {
         
         // print all A column from sheet [number] 
         // range between (3;19) is necessary to get proper data from excel file, while data starts with 3rd row to 19 ( 20nd row is summary)
-        for(int i = 3 ; i < 19 ; i++)
+        for(int i = beginning_row ; i < ending_row ; i++)
         {
            
             // if next cell IS NOT EMPTY (cell of the 1 column (not 0 ) )
