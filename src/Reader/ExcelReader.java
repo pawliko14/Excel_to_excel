@@ -17,13 +17,13 @@ import java.util.List;
 
 public class ExcelReader {
 	 
-    private static List<excel_object> objects = new ArrayList<>();
+    private  List<excel_object> objects = new ArrayList<>();
 
     public static void main(String[] args) throws IOException, InvalidFormatException {
     	
     	//to tests
-    	ExcelReader read = new ExcelReader();
-    	read.Read_from_file("02.2019");
+   // 	ExcelReader read = new ExcelReader();
+   // 	read.Read_from_file("02.2019");
 
     }
         
@@ -157,6 +157,8 @@ public class ExcelReader {
             
             }
         }
+        
+        System.out.println("reader -> biggestvalue " + biggestValue);
                 
         // print all depends on numeber of rows:
         for(int i = 2 ; i < biggestValue + 2  ;i++)
@@ -190,6 +192,8 @@ public class ExcelReader {
        	 		objects.add(object);
         }
         
+      System.out.println("reader -> objectsSize " + objects.size());
+
 
         // Closing the workbook
         workbook.close();

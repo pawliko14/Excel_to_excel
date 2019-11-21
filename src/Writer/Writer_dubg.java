@@ -5,7 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.poi.EncryptedDocumentException;
@@ -35,10 +37,13 @@ import parameters.Parameters;
  * @author www.codejava.net
  *
  */
-public class Writer {
+public class Writer_dubg {
 	
+//	  public static final String SAMPLE_XLSX_FILE_PATH = "C:\\Users\\el08\\Desktop\\Irek_exel\\WYSY£KI MASZYN.xls";
+//	  public static final String PATH_TO_FOLDER = "C:\\Users\\el08\\Desktop\\Irek_exel\\";
 	  
-	    private static List<excel_object> objects = new ArrayList<>();
+	    private  List<excel_object> objects = new ArrayList<>();
+
 	    
 	    public Sheet getSheet() throws EncryptedDocumentException, InvalidFormatException, IOException
 	    {
@@ -75,11 +80,14 @@ public class Writer {
 	    {				  
 	            try {
 	            	System.out.println("                                ");           	
-	            	System.out.println("--------------------------------- ");           	
-
-	            	System.out.println("take data from reader: ");           	
+	            	System.out.println("--------------------------------- ");  
+	            	System.out.println("take data from reader: ");   
+	            	
+	            	objects.clear();
 	            	ExcelReader read = new ExcelReader();            	
-	            	objects =read.Read_from_file(data);
+	            	objects = read.Read_from_file(data);
+	            	
+	            	System.out.println("objects.size: " + objects.size());
 	            	
 	    		} catch (EncryptedDocumentException | InvalidFormatException | IOException e) {
 	    			// TODO Auto-generated catch block
@@ -93,7 +101,9 @@ public class Writer {
 	            try {
 	                FileInputStream inputStream = new FileInputStream(new File(Parameters.getPathToIrekFile()));
 	                Workbook workbook = WorkbookFactory.create(inputStream);	     
-	                Sheet sheet = workbook.getSheetAt(0);          
+	                Sheet sheet = workbook.getSheetAt(0);        
+	                
+	                System.out.println("Sheet in workbook: " + workbook.getSheetAt(0));
 	                
 	                
 	                
@@ -101,8 +111,12 @@ public class Writer {
 	                
 	                int rowCount = GetAllWrittenRows(sheet, workbook);            
 	   
-       
-	                // create rows based on data taken form excelreader
+	                System.out.println("Row count: " + rowCount);
+	                
+	                
+	           
+	                
+	                System.out.println("Objects size: " + objects.size());
 	                for(int j = 0 ;  j < objects.size()-1 ; j++)
 	                {
 	                	Row row = sheet.createRow(rowCount++);
@@ -189,14 +203,26 @@ public class Writer {
 	                    	  cell_9.setCellValue((String) objects.get(j).getKurs_EUR() );
 	                    	  GetCellStyle(cell_9,workbook);
 
-	                      }                                
+	                      }
+	                      
+	                      
 	                }
+	                System.out.println("end of long for over cells");
+	                
+	                for(excel_object c : objects )
+	                	 c.printObject();
+	                
+	       
+		              
+//		              System.out.println("passed cell list: ");
+//		              for(Cell c : cells)
+//		              {
+//		            	  System.out.println(c.getCellFormula());
+//		              }
 	                
 	                
-
+	     
 	                inputStream.close();
-	                
-
 	                FileOutputStream outputStream = new FileOutputStream(Parameters.getPathToIrekFile());
 	                workbook.write(outputStream);
 	                workbook.close();
@@ -209,6 +235,17 @@ public class Writer {
 	        
 	    }
  
+	public static void main(String[] args) throws EncryptedDocumentException, InvalidFormatException, IOException {
+		
+		// to tests but function need to be static
+//		 Writer w = new Writer();
+//		 w.RemoveRows(w.getSheet());
+//		 w.write("02.2019");
+		 
+		// System.out.println("methods(without get) : " );
+		
+	}
+	
 	public static void GetCellStyle(Cell cell, Workbook wb)
 	{
         CellStyle style = wb.createCellStyle();  
@@ -285,7 +322,7 @@ public class Writer {
 		
 	}
 	
-	public static List<Cell> GetLastRow() throws EncryptedDocumentException, InvalidFormatException, IOException
+	public static List<Cell> GetLastRow_new_version_3rd_version() throws EncryptedDocumentException, InvalidFormatException, IOException
 	{
 		int HowManyCellsInTheRow = 10;
 		int SpaceBettwenLastRow = 2;
@@ -329,7 +366,7 @@ public class Writer {
         
       
         //insert to sheet
-        Row row = sheet.createRow(sheet.getLastRowNum()+ SpaceBettwenLastRow); 
+        Row row = sheet.createRow(sheet.getLastRowNum() + SpaceBettwenLastRow); 
         int columnCount = 0;
         for(int i = 0 ; i < ListOfCellsInRow.size(); i++)
         {
