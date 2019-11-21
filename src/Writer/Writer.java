@@ -15,7 +15,9 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -55,15 +57,40 @@ public class Writer {
 	    	return sheet;
 	    }
 	    
-	    public void write(String data)
-	    {	
+
+	    
+	    public int GetAllWrittenRows(Sheet sheet, Workbook wb)
+	    {
+	    	int notNullCount = 0;
+	    	 sheet = wb.getSheetAt(0);
+	    	for (Row row : sheet) {
+	    	    for (Cell cell : row) {
+	    	        if (cell.getCellType() != Cell.CELL_TYPE_BLANK) {
+	    	            if (cell.getCellType() != Cell.CELL_TYPE_STRING ||
+	    	                cell.getStringCellValue().length() > 0) {
+	    	                notNullCount++;
+	    	                break;
+	    	            }
+	    	        }
+	    	    }
+	    	}
+	    	return notNullCount;
+	    }
+	    
+	    
+	    
+	    public void CopyLastRow(Sheet sheet, Workbook wb)
+	    {
 	    	
-	    	//	GetLastRow();
-	    		
-	    				  
+	    }
+	
+	    
+	    public void write(String data)
+	    {				  
 	            try {
-	            	System.out.println("take data from reader: ");
-	            	objects =ExcelReader.Read_from_file(data);
+	            	System.out.println("take data from reader: ");           	
+	            	ExcelReader read = new ExcelReader();            	
+	            	objects =read.Read_from_file(data);
 	            	
 	    		} catch (EncryptedDocumentException | InvalidFormatException | IOException e) {
 	    			// TODO Auto-generated catch block
@@ -71,18 +98,27 @@ public class Writer {
 	    		}
 	            
 	          
+	           
 	            
 	            //saving data to given file works fine, but syntax do not allow to manipulate over excel_object object list
 	            try {
 	                FileInputStream inputStream = new FileInputStream(new File(Parameters.getPathToIrekFile()));
 	                Workbook workbook = WorkbookFactory.create(inputStream);	     
-	                Sheet sheet = workbook.getSheetAt(0);              
-	                int rowCount = sheet.getLastRowNum();
-	     
+	                Sheet sheet = workbook.getSheetAt(0);          
+	                
+	                
+	                int rowCount = GetAllWrittenRows(sheet, workbook);            
+	   
+	                System.out.println("Row count: " + rowCount);
+	                
+	                
+	           
+	                
+	             //   System.exit(0);
 	                
 	                for(int j = 0 ;  j < objects.size()-1 ; j++)
 	                {
-	                	Row row = sheet.createRow(++rowCount);
+	                	Row row = sheet.createRow(rowCount++);
 	                	
 	                	int columnCount  = 0;
 	                	
@@ -170,6 +206,18 @@ public class Writer {
 	                      
 	                      
 	                }
+	                
+	                
+	                // to test
+		              List<Cell> cells =   GetLastRow_new_version_3rd_version();
+		              
+		              System.out.println("passed cell list: ");
+		              for(Cell c : cells)
+		              {
+		            	  System.out.println(c.getCellFormula());
+		              }
+	                
+	                
 	     
 	                inputStream.close();
 	                
@@ -189,15 +237,24 @@ public class Writer {
  
 	public static void main(String[] args) throws EncryptedDocumentException, InvalidFormatException, IOException {
 		
-		//write("02.2019");
+		// to tests but function need to be static
+		 Writer w = new Writer();
+		 w.RemoveRows(w.getSheet());
+		 w.write("02.2019");
+		 
+		// System.out.println("methods(without get) : " );
 		
 	}
 	
 	public static void GetCellStyle(Cell cell, Workbook wb)
 	{
         CellStyle style = wb.createCellStyle();  
+        
+        style.setAlignment(HorizontalAlignment.CENTER);
+        
         style.setBorderBottom(BorderStyle.THIN);  
         style.setBottomBorderColor(IndexedColors.BLACK.getIndex());  
+        
         
         style.setBorderRight(BorderStyle.THIN);  
         style.setRightBorderColor(IndexedColors.BLACK.getIndex());  
@@ -213,7 +270,7 @@ public class Writer {
 	
 	public static void removeRow(Sheet sheet, int rowIndex) {
 	    int lastRowNum=sheet.getLastRowNum();
-	    if(rowIndex>=0&&rowIndex<lastRowNum){
+	    if(rowIndex>=0 && rowIndex<lastRowNum){
 	        sheet.shiftRows(rowIndex+1,lastRowNum, -1);
 	    }
 	    if(rowIndex==lastRowNum){
@@ -233,12 +290,76 @@ public class Writer {
 	}
 
 	
+
+//	
+//	public static void GetLastRow_new_version() throws EncryptedDocumentException, InvalidFormatException, IOException
+//	{
+//		System.out.println("GetLastRow begin: ");
+//        
+//    	List<String> ListOfCellsInRow = new ArrayList<String>();		
+//    	List<CellStyle> CellStyleList = new ArrayList<CellStyle>();
+//  	
+//		 FileInputStream inputStream = new FileInputStream(new File(Parameters.getPathToIrekFileBackup()));
+//		 	Workbook workbook = WorkbookFactory.create(inputStream);
+//
+//
+//        Sheet sheet = workbook.getSheetAt(0); // first shieet
+//
+//
+//        DataFormatter formatter = new DataFormatter();
+//        
+//        int rowCount = sheet.getLastRowNum();
+//        
+//        for(int i = 0 ; i < 10 ; i++)
+//        {
+//        	String value_of_cell = formatter.formatCellValue(workbook.getSheetAt(0).getRow(rowCount).getCell(i));
+// 	
+//        	ListOfCellsInRow.add(value_of_cell);
+//        	
+//        	CellStyle newCellStyle = workbook.createCellStyle();
+//        	if(workbook.getSheetAt(0).getRow(rowCount).getCell(i) != null)
+//        		newCellStyle.cloneStyleFrom(workbook.getSheetAt(0).getRow(rowCount).getCell(i).getCellStyle());
+//        		CellStyleList.add(newCellStyle);
+//        	
+//        }
+//        
+//
+//        
+//        removeRow(sheet, rowCount);
+//        
+//      
+//        
+//        Row row = sheet.createRow(sheet.getLastRowNum()+5);
+//               
+//        int columnCount = 0;
+//        for(int i = 0 ; i < ListOfCellsInRow.size(); i++)
+//        {
+//      	  Cell cell = row.createCell(columnCount++);   
+//      	  cell.setCellStyle(CellStyleList.get(i));
+//        	  cell.setCellFormula( ListOfCellsInRow.get(i) );   
+//        }
+//		
+//        
+//        System.out.println("End of function");
+//        
+//        inputStream.close();
+//
+//        FileOutputStream outputStream = new FileOutputStream(Parameters.getPathToIrekFileBackup());
+//        workbook.write(outputStream);
+//        workbook.close();
+//        outputStream.close();
+//                
+//	}	
+//	
 	
-	//not done yet 14:32 20.11.2019
-	public static void GetLastRow() throws EncryptedDocumentException, InvalidFormatException, IOException
+	public static List<Cell> GetLastRow_new_version_3rd_version() throws EncryptedDocumentException, InvalidFormatException, IOException
 	{
+		System.out.println("GetLastRow begin: ");
         
     	List<String> ListOfCellsInRow = new ArrayList<String>();		
+    	List<CellStyle> CellStyleList = new ArrayList<CellStyle>();
+    	
+    	List<Cell> Cells = new ArrayList<Cell>();
   	
 		 FileInputStream inputStream = new FileInputStream(new File(Parameters.getPathToIrekFileBackup()));
 		 	Workbook workbook = WorkbookFactory.create(inputStream);
@@ -254,53 +375,56 @@ public class Writer {
         for(int i = 0 ; i < 10 ; i++)
         {
         	String value_of_cell = formatter.formatCellValue(workbook.getSheetAt(0).getRow(rowCount).getCell(i));
+ 	
         	ListOfCellsInRow.add(value_of_cell);
+        	
+        	CellStyle newCellStyle = workbook.createCellStyle();
+        	if(workbook.getSheetAt(0).getRow(rowCount).getCell(i) != null)
+        		newCellStyle.cloneStyleFrom(workbook.getSheetAt(0).getRow(rowCount).getCell(i).getCellStyle());
+        		CellStyleList.add(newCellStyle);
+        		
+        
+        	
         }
         
-        for(int i = 0 ; i < ListOfCellsInRow.size();i++)
-        {
-        	if( !ListOfCellsInRow.get(i).equals(""))
-        	System.out.println("value: ["+ i + "] : "  + ListOfCellsInRow.get(i));
-        }
-        
-        System.out.println("rowow Przed usunieciem ostatniego: " + sheet.getLastRowNum());
 
         
         removeRow(sheet, rowCount);
         
-        System.out.println("rowow po usunieciu ostatniego: " + sheet.getLastRowNum());
-        
-        
+      
         
         Row row = sheet.createRow(sheet.getLastRowNum()+2);
-        
-        // add '=' do every string of the row
-        
-        for(int i  = 0 ; i < ListOfCellsInRow.size(); i++ )
-        {
-        	String tmp = "=" + ListOfCellsInRow.get(i) ;
-        	
-        	
-        	
-        	ListOfCellsInRow.set(i, tmp);
-        }
-        
-        for(int i = 0 ; i < ListOfCellsInRow.size();i++)
-        {
-        	if( !ListOfCellsInRow.get(i).equals(""))
-        	System.out.println("value: ["+ i + "] : "  + ListOfCellsInRow.get(i));
-        }
-        
-        
-        // insert to last row copied values
+               
         int columnCount = 0;
         for(int i = 0 ; i < ListOfCellsInRow.size(); i++)
         {
-      	  Cell cell = row.createCell(columnCount++);          
-        	  cell.setCellValue((String) ListOfCellsInRow.get(i) );
-          
+      	  Cell cell = row.createCell(columnCount++);   
+      	  cell.setCellStyle(CellStyleList.get(i));
+         cell.setCellFormula( ListOfCellsInRow.get(i) );   
+        	  
+        	  Cells.add(cell);
         }
-		
+        
+        
+//		for(Cell c : Cells)
+//		{
+//			if(c.getCellTypeEnum() == CellType.STRING)
+//			{
+//				System.out.println("values: " + c.getStringCellValue());
+//			}
+//			else if(c.getCellTypeEnum() == CellType.NUMERIC)
+//			{
+//				System.out.println("values: " + c.getNumericCellValue());
+//
+//			}
+//			else if(c.getCellTypeEnum() == CellType.FORMULA)
+//			{
+//				System.out.println("values: " + c.getCellFormula());
+//
+//			}
+//		}
+        
+        System.out.println("End of function");
         
         inputStream.close();
 
@@ -308,6 +432,17 @@ public class Writer {
         workbook.write(outputStream);
         workbook.close();
         outputStream.close();
-                
+        
+        
+		return Cells;             
 	}	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

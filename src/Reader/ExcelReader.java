@@ -7,6 +7,8 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import org.apache.poi.ss.usermodel.*;
 
+import parameters.Parameters;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -15,13 +17,15 @@ import java.util.List;
 
 public class ExcelReader {
 	
-    public static final String SAMPLE_XLSX_FILE_PATH = "C:\\Users\\el08\\Desktop\\Irek_exel\\WYSY£KI MASZYN.xls";
+ //   public static final String SAMPLE_XLSX_FILE_PATH = "C:\\Users\\el08\\Desktop\\Irek_exel\\WYSY£KI MASZYN.xls";
     public static final String PATH_TO_FOLDER = "C:\\Users\\el08\\Desktop\\Irek_exel\\"; 
     private static List<excel_object> objects = new ArrayList<>();
 
     public static void main(String[] args) throws IOException, InvalidFormatException {
     	
-    	Read_from_file("02.2019");
+    	//to tests
+    	ExcelReader read = new ExcelReader();
+    	read.Read_from_file("02.2019");
 
     }
     
@@ -76,7 +80,7 @@ public class ExcelReader {
     public static List<String> ReadHowManySheetsInIzasFile() throws EncryptedDocumentException, InvalidFormatException, IOException
     {
     	List<String> ListOfSheets = new ArrayList<String>();
-        Workbook workbook = WorkbookFactory.create(new File(SAMPLE_XLSX_FILE_PATH));
+        Workbook workbook = WorkbookFactory.create(new File(Parameters.getSampleXlsxFilePath()));
         
         for(Sheet sheet : workbook)
         {
@@ -116,20 +120,19 @@ public class ExcelReader {
     	return string_between_Brackets;
     }
     
-    public static List<excel_object> Read_from_file(String dateMonth_to_retrive) throws IOException, EncryptedDocumentException, InvalidFormatException
+    public List<excel_object> Read_from_file(String dateMonth_to_retrive) throws IOException, EncryptedDocumentException, InvalidFormatException
     {
   	
     	
     	List<String> ListOfSheets = ReadHowManySheetsInIzasFile();
     	
-    	PrintStream fileout = new PrintStream(PATH_TO_FOLDER + "LogFile.txt");
+    //	PrintStream fileout = new PrintStream(PATH_TO_FOLDER + "LogFile.txt");
     	
 
         // Creating a Workbook from an Excel file (.xls or .xlsx)
-        Workbook workbook = WorkbookFactory.create(new File(SAMPLE_XLSX_FILE_PATH));
+        Workbook workbook = WorkbookFactory.create(new File(Parameters.getSampleXlsxFilePath()));
 
         int index_of_sheet_02_2019 = 0;
-     //   String  temp_02_2019= "02.2019";
         
        for(int i = 0 ; i < ListOfSheets.size() ; i++)
        {
@@ -137,13 +140,7 @@ public class ExcelReader {
     			   index_of_sheet_02_2019 = i;
        }
        
-       int sheet_number = index_of_sheet_02_2019;
-
-
-       // set out to file
-     //  	System.setOut(fileout);
-
- 
+        int sheet_number = index_of_sheet_02_2019;
         int biggestValue_previous = 0 ; // it means how many machines has been sold in this month
         int biggestValue = 0 ; // it means how many machines has been sold in this month
 
@@ -154,8 +151,8 @@ public class ExcelReader {
         for(int i = 3 ; i < 19 ; i++)
         {
            
-            // if next cell IS NOT EMPTY
-            if(!formatter.formatCellValue(workbook.getSheetAt(sheet_number).getRow(i).getCell(0)).isEmpty() )
+            // if next cell IS NOT EMPTY (cell of the 1 column (not 0 ) )
+            if(!formatter.formatCellValue(workbook.getSheetAt(sheet_number).getRow(i).getCell(1)).isEmpty() )
             {
             	            	
 	            biggestValue_previous   = Integer.parseInt(formatter.formatCellValue((workbook.getSheetAt(sheet_number).getRow(i-1).getCell(0))));
@@ -199,14 +196,7 @@ public class ExcelReader {
        	 		objects.add(object);
         }
         
-        //print all object from the list
-        System.out.println("all objects in the arraylist: ");
-        
-//        for(excel_object ob : objects)
-//        {
-//        	ob.printObject();
-//        }
-	
+
         // Closing the workbook
         workbook.close();
         

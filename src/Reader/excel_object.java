@@ -1,6 +1,6 @@
 package Reader;
 
-
+import java.lang.reflect.Field;
 
 public class excel_object  {
 
@@ -15,6 +15,14 @@ public class excel_object  {
 	private String Value_PLN;
 	private String Kurs_EUR;
 
+	
+	public Field[] get_all_fields()
+	{
+		Field[] fields = getClass().getDeclaredFields();
+		
+		return fields;
+		
+	}
 	
 	public int get_number_of_fields()
 	{
