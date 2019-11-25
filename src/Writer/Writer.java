@@ -227,6 +227,10 @@ public class Writer {
         
         style.setBorderLeft(BorderStyle.THIN);
         
+     //   style.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+        style.setFillBackgroundColor(IndexedColors.GREY_50_PERCENT.getIndex());
+    //    style.setFillBackgroundColor(IndexedColors.YELLOW.getIndex());
+        
         cell.setCellStyle(style);  
 	}
 	

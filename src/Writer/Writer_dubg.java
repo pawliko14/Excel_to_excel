@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -76,8 +78,10 @@ public class Writer_dubg {
 	    
 	    
 	    
-	    public void write(String data)
-	    {				  
+	    public void write(String data) throws ParseException
+	    {			
+	    	boolean EmptyList = false;
+	    	
 	            try {
 	            	System.out.println("                                ");           	
 	            	System.out.println("--------------------------------- ");  
@@ -87,6 +91,11 @@ public class Writer_dubg {
 	            	ExcelReader read = new ExcelReader();            	
 	            	objects = read.Read_from_file(data);
 	            	
+	            	if(objects.size() == 0 )
+	            	{
+	            		EmptyList =true;
+	            	}
+	            	
 	            	System.out.println("objects.size: " + objects.size());
 	            	
 	    		} catch (EncryptedDocumentException | InvalidFormatException | IOException e) {
@@ -95,8 +104,8 @@ public class Writer_dubg {
 	    		}
 	            
 	          
-	           
-	            
+	           if(EmptyList == false)
+	           {
 	            //saving data to given file works fine, but syntax do not allow to manipulate over excel_object object list
 	            try {
 	                FileInputStream inputStream = new FileInputStream(new File(Parameters.getPathToIrekFile()));
@@ -153,9 +162,9 @@ public class Writer_dubg {
 	                      }
 	                      
 	                      Cell cell_3 = row.createCell(columnCount++);
-	                      if(objects.get(j).getSN() instanceof String)
+	                      if(objects.get(j).getSN()  instanceof String  )
 	                      {
-	                    	  cell_3.setCellValue((String) objects.get(j).getSN() );
+	                    	  cell_3.setCellValue( Integer.parseInt(objects.get(j).getSN()) );
 	                    	  GetCellStyle(cell_3,workbook);
 
 	                      }
@@ -187,7 +196,16 @@ public class Writer_dubg {
 	                      Cell cell_7 = row.createCell(columnCount++);
 	                      if(objects.get(j).getValue_EUR() instanceof String)
 	                      {
-	                    	  cell_7.setCellValue((String) objects.get(j).getValue_EUR() );
+	                    	 
+	                    	  double d = 0;
+	                    	  if(objects.get(j).getValue_EUR().contains(","))
+	                    			  {
+	                    		  		Number number = NumberFormat.getInstance().parse(objects.get(j).getValue_EUR());                   		   
+	                    		   		d = number.doubleValue();
+	                    			  } 
+                   		 
+
+	                    	  cell_7.setCellValue( d);
 	                    	  GetCellStyle(cell_7,workbook);
 
 	                      }
@@ -195,7 +213,15 @@ public class Writer_dubg {
 	                      Cell cell_8 = row.createCell(columnCount++);
 	                      if(objects.get(j).getValue_PLN() instanceof String)
 	                      {
-	                    	  cell_8.setCellValue((String) objects.get(j).getValue_PLN() );
+	                    	
+	                    	  double d = 0;
+	                    	  
+	                    	  if(objects.get(j).getValue_EUR().contains(","))
+	                    	  {                    		   
+	                    		   Number number = NumberFormat.getInstance().parse(objects.get(j).getValue_EUR());   
+	                    		    d = number.doubleValue();	   
+	                    	  }
+	                    	  cell_8.setCellValue(d );
 	                    	  GetCellStyle(cell_8,workbook);
 
 	                      }
@@ -210,20 +236,11 @@ public class Writer_dubg {
 	                      
 	                      
 	                }
-	                System.out.println("end of long for over cells");
 	                
 	                for(excel_object c : objects )
 	                	 c.printObject();
 	                
-	       
-		              
-//		              System.out.println("passed cell list: ");
-//		              for(Cell c : cells)
-//		              {
-//		            	  System.out.println(c.getCellFormula());
-//		              }
-	                
-	                
+                         
 	     
 	                inputStream.close();
 	                FileOutputStream outputStream = new FileOutputStream(Parameters.getPathToIrekFile());
@@ -235,6 +252,7 @@ public class Writer_dubg {
 	                    | InvalidFormatException ex) {
 	                ex.printStackTrace();
 	            }
+	          }
 	        
 	    }
  
