@@ -37,13 +37,15 @@ import parameters.Parameters;
  * @author www.codejava.net
  *
  */
-public class Writer_dubg {
+public class Writer_tester {
 	
 	    private  List<excel_object> objects = new ArrayList<>();
 	    private int MAXROWS = 9999;
 	    private int LastRowWithOldData =2672;
-	    private static List<Cell> Cells = new ArrayList<Cell>(); // list of copied cells from the last row
 	    
+	    private static List<Cell> Cells = new ArrayList<Cell>(); // list of copied cells from the last row
+		private static List<String> ListOfCellsInRow = new ArrayList<String>();		
+    	private static List<CellStyle> CellStyleList = new ArrayList<CellStyle>();
 	   
 	    public Sheet getSheet() throws EncryptedDocumentException, InvalidFormatException, IOException
 	    {
@@ -117,7 +119,7 @@ public class Writer_dubg {
 	            //        List<Cell> cells =  GetLastRow_new_version_3rd_version();
 	                
 	                
-	            //    System.exit(0);
+	          
 	                
 	                System.out.println("Objects size: " + objects.size());
 	                for(int j = 0 ;  j < objects.size() ; j++)
@@ -343,22 +345,54 @@ public class Writer_dubg {
 	}
 	
 	
+//	
+//	public void Push_copied_row_to_sheet_again(Sheet sheet) throws EncryptedDocumentException, InvalidFormatException, IOException
+//	{
+//		
+//		 FileInputStream inputStream = new FileInputStream(new File(Parameters.getPathToIrekFileBackup()));
+//		 	Workbook workbook = WorkbookFactory.create(inputStream);
+//		
+//		 int SpaceBettwenLastRow = 2;
+//        
+//      
+//        //insert to sheet
+//        Row row = sheet.createRow(sheet.getLastRowNum() + SpaceBettwenLastRow); 
+//        int columnCount = 0;
+//        for(int i = 0 ; i < ListOfCellsInRow.size(); i++)
+//        {
+//      	  Cell cell = row.createCell(columnCount++);   
+//      	  cell.setCellStyle(CellStyleList.get(i));
+//          cell.setCellFormula( ListOfCellsInRow.get(i) );   
+//        	  
+//        	  Cells.add(cell);
+//        }
+//        
+//        
+//        inputStream.close();
+//        FileOutputStream outputStream = new FileOutputStream(Parameters.getPathToIrekFileBackup());
+//        workbook.write(outputStream);
+//        workbook.close();
+//        outputStream.close();
+//        
+//	}
 	
-	public static List<Cell> GetLastRow_new_version_3rd_version() throws EncryptedDocumentException, InvalidFormatException, IOException
+	
+	public static List<Cell> GetLastRow_Copy_it_then_remove_from_sheet() throws EncryptedDocumentException, InvalidFormatException, IOException
 	{
 		int HowManyCellsInTheRow = 10;
-		int SpaceBettwenLastRow = 10;
 		int SheetNumeber = 0;
-		
+		 int SpaceBettwenLastRow = 2;
+
 		
 		System.out.println("GetLastRow begin: ");
         
-    	List<String> ListOfCellsInRow = new ArrayList<String>();		
-    	List<CellStyle> CellStyleList = new ArrayList<CellStyle>();
+    
   	
 		 FileInputStream inputStream = new FileInputStream(new File(Parameters.getPathToIrekFileBackup()));
 		 	Workbook workbook = WorkbookFactory.create(inputStream);
 
+		 	CellStyle w = workbook.createCellStyle();
+		 	w.setQuotePrefixed(false);
 
         Sheet sheet = workbook.getSheetAt(SheetNumeber); 
 
@@ -375,6 +409,7 @@ public class Writer_dubg {
         	ListOfCellsInRow.add(value_of_cell);
         	
         	CellStyle newCellStyle = workbook.createCellStyle();
+   //     	newCellStyle.setQuotePrefixed(false); // should remove  " ' " sign from excel sheet
         	if(workbook.getSheetAt(SheetNumeber).getRow(rowCount).getCell(i) != null)
         		newCellStyle.cloneStyleFrom(workbook.getSheetAt(SheetNumeber).getRow(rowCount).getCell(i).getCellStyle());
         	
@@ -395,15 +430,12 @@ public class Writer_dubg {
       	  Cell cell = row.createCell(columnCount++);   
       	  cell.setCellStyle(CellStyleList.get(i));
           cell.setCellFormula( ListOfCellsInRow.get(i) );   
-        	  
+          
         	  Cells.add(cell);
         }
         
         
-        PrintCellInArray(Cells);
-
-        
-        System.out.println("End of function");
+      
         
         inputStream.close();
         FileOutputStream outputStream = new FileOutputStream(Parameters.getPathToIrekFileBackup());

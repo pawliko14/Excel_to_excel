@@ -38,7 +38,7 @@ import parameters.Parameters;
 public class Writer {
 	
 	  
-	    private static List<excel_object> objects = new ArrayList<>();
+	    private  List<excel_object> objects = new ArrayList<>();
 	    
 	    public Sheet getSheet() throws EncryptedDocumentException, InvalidFormatException, IOException
 	    {

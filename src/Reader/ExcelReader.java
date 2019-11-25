@@ -50,27 +50,7 @@ public class ExcelReader {
     	}
     	
     }
-    
-    public enum IzasExcelColumnName
-    {
-    	LP(0),
-    	CUSTOMER(1),
-    	TYPE_OF_LATHE(2),
-    	SN(3),
-    	QTY_EUR(4),
-    	VALUE(5),
-    	DATE_OF_SHIPMENT(6),
-    	QTY_PLN(7),
-    	VALUE_OF_THE_INVOICE_PLN(8),
-    	UWAGI(9);
-    	
-    	public final int value; 	
-    	private IzasExcelColumnName(int value)
-    	{
-    		this.value =value;
-    	}
-    }
-      
+          
     
     public static List<String> ReadHowManySheetsInIzasFile() throws EncryptedDocumentException, InvalidFormatException, IOException
     {
@@ -115,6 +95,19 @@ public class ExcelReader {
     	return string_between_Brackets;
     }
     
+    public int GetIndexOfTheSheet(List<String> ListOfSheets ,String dateMonth_to_retrive )
+    {
+    	int sheetNumber = 0;
+    	
+    	 for(int i = 0 ; i < ListOfSheets.size() ; i++)
+         {
+      	   if(ListOfSheets.get(i).equals(dateMonth_to_retrive))
+      		   sheetNumber = i;
+         }
+    	
+    	return sheetNumber;
+    }
+    
     public List<excel_object> Read_from_file(String dateMonth_to_retrive) throws IOException, EncryptedDocumentException, InvalidFormatException
     {
     	int index_of_the_sheet = 0;
@@ -126,15 +119,9 @@ public class ExcelReader {
         // Creating a Workbook from an Excel file (.xls or .xlsx)
         Workbook workbook = WorkbookFactory.create(new File(Parameters.getSampleXlsxFilePath()));
 
+        index_of_the_sheet = GetIndexOfTheSheet(ListOfSheets, dateMonth_to_retrive);
         
-        
-       for(int i = 0 ; i < ListOfSheets.size() ; i++)
-       {
-    	   if(ListOfSheets.get(i).equals(dateMonth_to_retrive))
-    			   index_of_the_sheet = i;
-       }
-       
-        int sheet_number = index_of_the_sheet;
+      
         int biggestValue_previous = 0 ; // it means how many machines has been sold in this month
         int biggestValue = 0 ; // it means how many machines has been sold in this month
 
@@ -146,11 +133,11 @@ public class ExcelReader {
         {
            
             // if next cell IS NOT EMPTY (cell of the 1 column (not 0 ) )
-            if(!formatter.formatCellValue(workbook.getSheetAt(sheet_number).getRow(i).getCell(1)).isEmpty() )
+            if(!formatter.formatCellValue(workbook.getSheetAt(index_of_the_sheet).getRow(i).getCell(1)).isEmpty() )
             {
             	            	
-	            biggestValue_previous   = Integer.parseInt(formatter.formatCellValue((workbook.getSheetAt(sheet_number).getRow(i-1).getCell(0))));
-	            biggestValue 			= Integer.parseInt(formatter.formatCellValue((workbook.getSheetAt(sheet_number).getRow(i).getCell(0))));
+	            biggestValue_previous   = Integer.parseInt(formatter.formatCellValue((workbook.getSheetAt(index_of_the_sheet).getRow(i-1).getCell(0))));
+	            biggestValue 			= Integer.parseInt(formatter.formatCellValue((workbook.getSheetAt(index_of_the_sheet).getRow(i).getCell(0))));
 	            
 	          if(biggestValue_previous> biggestValue)
 	        	biggestValue =biggestValue_previous;
@@ -165,26 +152,26 @@ public class ExcelReader {
         {  	 
        	  // get substring of full date ( get only year)
 	       	String year = "";
-	       	if (formatter.formatCellValue(workbook.getSheetAt(sheet_number).getRow(i).getCell(IrekExcelColumnName.DATE.value)).length() > 4) 
-	       	     year  = formatter.formatCellValue(workbook.getSheetAt(sheet_number).getRow(i).getCell(IrekExcelColumnName.DATE.value)).substring(formatter.formatCellValue(workbook.getSheetAt(sheet_number).getRow(i).getCell(IrekExcelColumnName.DATE.value)).length() - 4);
+	       	if (formatter.formatCellValue(workbook.getSheetAt(index_of_the_sheet).getRow(i).getCell(IrekExcelColumnName.DATE.value)).length() > 4) 
+	       	     year  = formatter.formatCellValue(workbook.getSheetAt(index_of_the_sheet).getRow(i).getCell(IrekExcelColumnName.DATE.value)).substring(formatter.formatCellValue(workbook.getSheetAt(index_of_the_sheet).getRow(i).getCell(IrekExcelColumnName.DATE.value)).length() - 4);
 	       	
 	       	
 	       	// trim cell for example DORMAC(NL) from Izas sheet to NL, because country is needed
-	       	String country = getStringBetweenBrackets(formatter.formatCellValue(workbook.getSheetAt(sheet_number).getRow(i).getCell(IrekExcelColumnName.CLIENT.value)));
+	       	String country = getStringBetweenBrackets(formatter.formatCellValue(workbook.getSheetAt(index_of_the_sheet).getRow(i).getCell(IrekExcelColumnName.CLIENT.value)));
 
        	 	
 	       	// creating excel object based on inner class 'Builder'
       	 	excel_object object = new excel_object.Builder()
        	 			.Country(country)
-       	 			.Client(formatter.formatCellValue(workbook.getSheetAt(sheet_number).getRow(i).getCell(IrekExcelColumnName.CLIENT.value)))
-       	 			.Machine_type(formatter.formatCellValue(workbook.getSheetAt(sheet_number).getRow(i).getCell(IrekExcelColumnName.MACHINE_TYPE.value)))
-       	 			.SN(formatter.formatCellValue(workbook.getSheetAt(sheet_number).getRow(i).getCell(IrekExcelColumnName.SN.value)))
-       	 			.Quantity(formatter.formatCellValue(workbook.getSheetAt(sheet_number).getRow(i).getCell(IrekExcelColumnName.QUANTITY.value)))
-       	 			.Date(formatter.formatCellValue(workbook.getSheetAt(sheet_number).getRow(i).getCell(IrekExcelColumnName.DATE.value)))
+       	 			.Client(formatter.formatCellValue(workbook.getSheetAt(index_of_the_sheet).getRow(i).getCell(IrekExcelColumnName.CLIENT.value)))
+       	 			.Machine_type(formatter.formatCellValue(workbook.getSheetAt(index_of_the_sheet).getRow(i).getCell(IrekExcelColumnName.MACHINE_TYPE.value)))
+       	 			.SN(formatter.formatCellValue(workbook.getSheetAt(index_of_the_sheet).getRow(i).getCell(IrekExcelColumnName.SN.value)))
+       	 			.Quantity(formatter.formatCellValue(workbook.getSheetAt(index_of_the_sheet).getRow(i).getCell(IrekExcelColumnName.QUANTITY.value)))
+       	 			.Date(formatter.formatCellValue(workbook.getSheetAt(index_of_the_sheet).getRow(i).getCell(IrekExcelColumnName.DATE.value)))
        	 			.Year(year)
-       	 			.Value_EUR(formatter.formatCellValue(workbook.getSheetAt(sheet_number).getRow(i).getCell(IrekExcelColumnName.VALUE_EUR.value)))
-       	 			.Value_PLN(formatter.formatCellValue(workbook.getSheetAt(sheet_number).getRow(i).getCell(IrekExcelColumnName.VALUE_PLN.value)))
-       	 			.Kurs_EUR(formatter.formatCellValue(workbook.getSheetAt(sheet_number).getRow(i).getCell(IrekExcelColumnName.KURS_EUR.value)))
+       	 			.Value_EUR(formatter.formatCellValue(workbook.getSheetAt(index_of_the_sheet).getRow(i).getCell(IrekExcelColumnName.VALUE_EUR.value)))
+       	 			.Value_PLN(formatter.formatCellValue(workbook.getSheetAt(index_of_the_sheet).getRow(i).getCell(IrekExcelColumnName.VALUE_PLN.value)))
+       	 			.Kurs_EUR(formatter.formatCellValue(workbook.getSheetAt(index_of_the_sheet).getRow(i).getCell(IrekExcelColumnName.KURS_EUR.value)))
        	 			.build();
       	 	
       
