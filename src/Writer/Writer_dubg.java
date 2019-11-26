@@ -19,6 +19,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
@@ -42,10 +43,11 @@ import parameters.Parameters;
 public class Writer_dubg {
 	
 	    private  List<excel_object> objects = new ArrayList<>();
-	    private int MAXROWS = 9999;
-	    private int LastRowWithOldData =2672;
+	    private static int LastRowWithOldData =2652-1;
 	    private static List<Cell> Cells = new ArrayList<Cell>(); // list of copied cells from the last row
-	    
+		private static List<String> ListOfCellsInRow = new ArrayList<String>();		
+    	private static List<CellStyle> CellStyleList = new ArrayList<CellStyle>();
+
 	   
 	    public Sheet getSheet() throws EncryptedDocumentException, InvalidFormatException, IOException
 	    {
@@ -143,6 +145,7 @@ public class Writer_dubg {
 	                      {
 	                    	  cell_0.setCellValue((String) objects.get(j).getCountry() );
 	                    	  GetCellStyle(cell_0,workbook);
+	                    	                  
 	                      }
 	                      
 	                      Cell cell_1 = row.createCell(columnCount++);
@@ -289,8 +292,13 @@ public class Writer_dubg {
 	}
 	
 	
-	public static void removeRow(Sheet sheet, int rowIndex) {
-	    int lastRowNum=sheet.getLastRowNum();
+	public static void removeRow(Sheet sheet, int rowIndex)  {
+	    
+          
+		
+		int lastRowNum=sheet.getLastRowNum();
+	   
+	    
 	    if(rowIndex>=0 && rowIndex<lastRowNum){
 	        sheet.shiftRows(rowIndex+1,lastRowNum, -1);
 	    }
@@ -298,16 +306,41 @@ public class Writer_dubg {
 	    	Row removingRow=sheet.getRow(rowIndex);
 	    	    	
 	        if(removingRow!=null){
+	         //   System.out.println("removed : " + rowIndex + "  ereased value : " + sheet.getRow(rowIndex).getCell(1).getStringCellValue());
 	            sheet.removeRow(removingRow);
 	        }
 	    }
+	    
+	   
 	}
 	
-	public void RemoveRows(Sheet sheet)
+	public void RemoveRows() throws EncryptedDocumentException, InvalidFormatException, IOException
 	{
-    	// remove last rows tests:
-        for(int i = 0 ; i < MAXROWS; i++)
-        	removeRow( sheet,  LastRowWithOldData + i); 
+
+		  FileInputStream inputStream = new FileInputStream(new File(Parameters.getPathToIrekFile()));
+        Workbook workbook = WorkbookFactory.create(inputStream);	     
+        Sheet sheet1 = workbook.getSheetAt(0);       
+		
+		// LastRowWithOldData -> 2672
+		int lastRow = sheet1.getLastRowNum();
+		
+		System.out.println("last row -> " + lastRow + ", 2652 ->" + LastRowWithOldData);
+		
+				if(lastRow >= LastRowWithOldData)
+		{
+			System.out.println("lastRow > lastRowiwWithOldData");
+	    	// remove last rows :
+	        for(int i = lastRow ; i>= LastRowWithOldData ; i--)
+	        {
+	        	removeRow( sheet1,  i); 
+	        }
+		}
+        
+        inputStream.close();
+        FileOutputStream outputStream = new FileOutputStream(Parameters.getPathToIrekFile());
+        workbook.write(outputStream);
+        workbook.close();
+        outputStream.close();
 	}
 
 	
@@ -361,28 +394,26 @@ public class Writer_dubg {
 	}
 	
 	
-	
-	public static List<Cell> GetLastRow_new_version_3rd_version() throws EncryptedDocumentException, InvalidFormatException, IOException
+	public  List<Cell> GetLastRow_Copy_it_then_remove_from_sheet() throws EncryptedDocumentException, InvalidFormatException, IOException
 	{
 		int HowManyCellsInTheRow = 10;
-		int SpaceBettwenLastRow = 10;
 		int SheetNumeber = 0;
-		
+		 int SpaceBettwenLastRow = 12;
+
 		
 		System.out.println("GetLastRow begin: ");
         
-    	List<String> ListOfCellsInRow = new ArrayList<String>();		
-    	List<CellStyle> CellStyleList = new ArrayList<CellStyle>();
+    
   	
 		 FileInputStream inputStream = new FileInputStream(new File(Parameters.getPathToIrekFileBackup()));
 		 	Workbook workbook = WorkbookFactory.create(inputStream);
-
-
-        Sheet sheet = workbook.getSheetAt(SheetNumeber); 
-
+		 	Sheet sheet = workbook.getSheetAt(SheetNumeber); 
 
         DataFormatter formatter = new DataFormatter(); 
         int rowCount = sheet.getLastRowNum();
+        
+    	System.out.println("rowCount : " +rowCount);
+
         
         
         // get row 
@@ -390,9 +421,15 @@ public class Writer_dubg {
         {
         	String value_of_cell = formatter.formatCellValue(workbook.getSheetAt(SheetNumeber).getRow(rowCount).getCell(i));
  	
+        	System.out.println("value_of_cell : " +value_of_cell);
+
+        	
         	ListOfCellsInRow.add(value_of_cell);
         	
+        	System.out.println("ListOfCellsInRow : " + ListOfCellsInRow.get(i));
+        	
         	CellStyle newCellStyle = workbook.createCellStyle();
+   //     	newCellStyle.setQuotePrefixed(false); // should remove  " ' " sign from excel sheet
         	if(workbook.getSheetAt(SheetNumeber).getRow(rowCount).getCell(i) != null)
         		newCellStyle.cloneStyleFrom(workbook.getSheetAt(SheetNumeber).getRow(rowCount).getCell(i).getCellStyle());
         	
@@ -405,23 +442,20 @@ public class Writer_dubg {
         removeRow(sheet, rowCount);
         
       
-        //insert to sheet
-        Row row = sheet.createRow(sheet.getLastRowNum() + SpaceBettwenLastRow); 
-        int columnCount = 0;
-        for(int i = 0 ; i < ListOfCellsInRow.size(); i++)
-        {
-      	  Cell cell = row.createCell(columnCount++);   
-      	  cell.setCellStyle(CellStyleList.get(i));
-          cell.setCellFormula( ListOfCellsInRow.get(i) );   
-        	  
-        	  Cells.add(cell);
-        }
+//        //insert to sheet
+//        Row row = sheet.createRow(sheet.getLastRowNum() + SpaceBettwenLastRow); 
+//        int columnCount = 0;
+//        for(int i = 0 ; i < ListOfCellsInRow.size(); i++)
+//        {
+//      	  Cell cell = row.createCell(columnCount++);   
+//      	  cell.setCellStyle(CellStyleList.get(i));
+//          cell.setCellFormula( ListOfCellsInRow.get(i) );   
+//          
+//        	  Cells.add(cell);
+//        }
         
         
-        PrintCellInArray(Cells);
-
-        
-        System.out.println("End of function");
+      
         
         inputStream.close();
         FileOutputStream outputStream = new FileOutputStream(Parameters.getPathToIrekFileBackup());
@@ -432,6 +466,61 @@ public class Writer_dubg {
         
 		return Cells;             
 	}	
+	
+	public void InsertToTheSheet( ) throws IOException, EncryptedDocumentException, InvalidFormatException
+	{
+		int SheetNumeber = 0;
+		 int SpaceBettwenLastRow = 3;
+		
+		 FileInputStream inputStream = new FileInputStream(new File(Parameters.getPathToIrekFileBackup()));
+		 	Workbook workbook = WorkbookFactory.create(inputStream);
+		 	Sheet sheet = workbook.getSheetAt(SheetNumeber);
+		
+		 	System.out.println("elements in listofcellinrow: " + ListOfCellsInRow.size());
+		 	
+		 	for(String s : ListOfCellsInRow)
+			 	System.out.println("elements : " + s);
+
+		 	
+		 	
+	     //insert to sheet
+        Row row = sheet.createRow(sheet.getLastRowNum() + SpaceBettwenLastRow); 
+        int columnCount = 0;
+        for(int i = 0 ; i < ListOfCellsInRow.size(); i++)
+        {
+      	  Cell cell = row.createCell(columnCount++);   
+      	//  cell.setCellStyle(CellStyleList.get(i)); // could be problematic
+      	  
+      	  CellStyle style = workbook.createCellStyle();
+       	  style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+          style.setFillBackgroundColor(IndexedColors.BROWN.getIndex());
+          style.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+          
+          style.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+          style.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+          style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+          style.setTopBorderColor(IndexedColors.BLACK.getIndex());
+          
+          style.setAlignment(HorizontalAlignment.CENTER);
+      	  
+      	  cell.setCellStyle(style);
+      	  
+          cell.setCellFormula( ListOfCellsInRow.get(i) );   
+          
+        	  Cells.add(cell);
+        }
+        
+        
+        inputStream.close();
+        FileOutputStream outputStream = new FileOutputStream(Parameters.getPathToIrekFileBackup());
+        workbook.write(outputStream);
+        workbook.close();
+        outputStream.close();
+		
+		
+	}
+	
 	
 	
 	private static void PrintCellInArray(List<Cell> Cells)

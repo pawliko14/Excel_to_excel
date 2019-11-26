@@ -40,27 +40,33 @@ public class main {
 	
 	
 		
-		
+		// get all data bettwen 01.12.2018 till now()
 		GetListOfMonth();
 		
-		//working good
+		//initialize writing section
 		Writer_dubg write = new Writer_dubg();
+
+		// get last row of the summary
+		write.GetLastRow_Copy_it_then_remove_from_sheet();
+
+		// remove last row from the sheet
+		write.RemoveRows();
 		
-		write.RemoveRows(write.getSheet());
+		
 		
 		/*
 		 *  MAIN FUNCTION, ITERATION ARE BASED ON LIST OF ELEMENT THAT ARE GRATER THAN 12.2018 ( OLDER DATA IS INCLUDED TO THE SHEET)
-		 */
-		
-		for(int i = 0 ;i < FinalListOfDates.size();i++)
+		 *  
+		 *  insertion rows from Izas excel to Irek
+		 */	
+	for(int i = 0 ;i < FinalListOfDates.size();i++)
 			write.write(FinalListOfDates.get(i));
 		
-//		write.write("02.2019");
-//		write.write("03.2019");
-//		write.write("04.2019");
-//		write.write("05.2019");
-//		write.write("06.2019");
-
+	
+		// write again copied row to specific position
+		write.InsertToTheSheet();
+		
+		
 
 		
 		System.out.println("Done without errors");
