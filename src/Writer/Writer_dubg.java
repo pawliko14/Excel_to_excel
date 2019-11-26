@@ -1,5 +1,6 @@
 package Writer;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -111,7 +112,8 @@ public class Writer_dubg {
 	            //saving data to given file works fine, but syntax do not allow to manipulate over excel_object object list
 	            try {
 	                FileInputStream inputStream = new FileInputStream(new File(Parameters.getPathToIrekFile()));
-	                Workbook workbook = WorkbookFactory.create(inputStream);	     
+	                BufferedInputStream bis = new BufferedInputStream(new FileInputStream(new File(Parameters.getPathToIrekFile())));
+	                Workbook workbook = WorkbookFactory.create(bis);	     
 	                Sheet sheet = workbook.getSheetAt(0);        
 	                
 	                System.out.println("Sheet in workbook: " + workbook.getSheetAt(0));
@@ -125,10 +127,7 @@ public class Writer_dubg {
 	                System.out.println("Row count: " + rowCount);
 	                
 	                
-	            //        List<Cell> cells =  GetLastRow_new_version_3rd_version();
-	                
-	                
-	            //    System.exit(0);
+	           //     CellStyle style = workbook.createCellStyle();  
 	                
 	                System.out.println("Objects size: " + objects.size());
 	                for(int j = 0 ;  j < objects.size() ; j++)
@@ -144,7 +143,7 @@ public class Writer_dubg {
 	                      if(objects.get(j).getCountry() instanceof String)
 	                      {
 	                    	  cell_0.setCellValue((String) objects.get(j).getCountry() );
-	                    	  GetCellStyle(cell_0,workbook);
+	                 //   	  GetCellStyle(cell_0,workbook,style);
 	                    	                  
 	                      }
 	                      
@@ -152,7 +151,7 @@ public class Writer_dubg {
 	                      if(objects.get(j).getClient() instanceof String)
 	                      {
 	                    	  cell_1.setCellValue((String) objects.get(j).getClient() );
-	                    	  GetCellStyle(cell_1,workbook);
+	             //       	  GetCellStyle(cell_1,workbook,style);
 
 	                      }
 	                      
@@ -160,7 +159,7 @@ public class Writer_dubg {
 	                      if(objects.get(j).getMachine_type() instanceof String)
 	                      {
 	                    	  cell_2.setCellValue((String) objects.get(j).getMachine_type() );
-	                    	  GetCellStyle(cell_2,workbook);
+	             //       	  GetCellStyle(cell_2,workbook,style);
 
 	                      }
 	                      
@@ -168,15 +167,23 @@ public class Writer_dubg {
 	                      if(objects.get(j).getSN()  instanceof String  )
 	                      {
 	                    	  cell_3.setCellValue( Integer.parseInt(objects.get(j).getSN()) );
-	                    	  GetCellStyle(cell_3,workbook);
+	         //           	  GetCellStyle(cell_3,workbook,style);
 
 	                      }
 	                      
 	                      Cell cell_4 = row.createCell(columnCount++);
 	                      if(objects.get(j).getQuantity() instanceof String)
 	                      {
-	                    	  cell_4.setCellValue((String) objects.get(j).getQuantity() );
-	                    	  GetCellStyle(cell_4,workbook);
+	                    	  double d = 0;
+	                    	  
+	                    	  if(objects.get(j).getQuantity().length() >=1)
+	                    	  {
+	                    		  Number number = NumberFormat.getInstance().parse(objects.get(j).getQuantity());                   		   
+		                    	  d = number.doubleValue();
+	                    	  }
+	                    	  
+	                    	  cell_4.setCellValue(d );
+	                   // 	  GetCellStyle(cell_4,workbook,style);
 
 	                      }
 	                      
@@ -184,15 +191,23 @@ public class Writer_dubg {
 	                      if(objects.get(j).getDate() instanceof String)
 	                      {
 	                    	  cell_5.setCellValue((String) objects.get(j).getDate() );
-	                    	  GetCellStyle(cell_5,workbook);
+	               //     	  GetCellStyle(cell_5,workbook,style);
 
 	                      }
 	                      
 	                      Cell cell_6 = row.createCell(columnCount++);
 	                      if(objects.get(j).getYear() instanceof String)
 	                      {
-	                    	  cell_6.setCellValue((String) objects.get(j).getYear() );
-	                    	  GetCellStyle(cell_6,workbook);
+	                    	  double d = 0;
+	                    	  if(objects.get(j).getYear().length() >= 4)
+	                    	  {
+		                    	  
+		                    	  Number number = NumberFormat.getInstance().parse(objects.get(j).getYear());                   		   
+		                    	  d = number.doubleValue();
+
+	                    	  }
+	                    	  cell_6.setCellValue(d);
+	                //    	  GetCellStyle(cell_6,workbook,style);
 
 	                      }
 	                      
@@ -209,7 +224,7 @@ public class Writer_dubg {
                    		 
 
 	                    	  cell_7.setCellValue( d);
-	                    	  GetCellStyle(cell_7,workbook);
+	                    //	  GetCellStyle(cell_7,workbook,style);
 
 	                      }
 	                      
@@ -219,13 +234,13 @@ public class Writer_dubg {
 	                    	
 	                    	  double d = 0;
 	                    	  
-	                    	  if(objects.get(j).getValue_EUR().contains(","))
+	                    	  if(objects.get(j).getValue_PLN().contains(","))
 	                    	  {                    		   
-	                    		   Number number = NumberFormat.getInstance().parse(objects.get(j).getValue_EUR());   
+	                    		   Number number = NumberFormat.getInstance().parse(objects.get(j).getValue_PLN());   
 	                    		    d = number.doubleValue();	   
 	                    	  }
 	                    	  cell_8.setCellValue(d );
-	                    	  GetCellStyle(cell_8,workbook);
+	                    	//  GetCellStyle(cell_8,workbook,style);
 
 	                      }
 	                      
@@ -233,7 +248,7 @@ public class Writer_dubg {
 	                      if(objects.get(j).getKurs_EUR() instanceof String)
 	                      {
 	                    	  cell_9.setCellValue((String) objects.get(j).getKurs_EUR() );
-	                    	  GetCellStyle(cell_9,workbook);
+	                    //	  GetCellStyle(cell_9,workbook,style);
 
 	                      }
 	                      
@@ -270,9 +285,9 @@ public class Writer_dubg {
 		
 	}
 	
-	public static void GetCellStyle(Cell cell, Workbook wb)
+	public static void GetCellStyle(Cell cell, Workbook wb, CellStyle style )
 	{
-        CellStyle style = wb.createCellStyle();  
+         style = wb.createCellStyle();  
         
         style.setAlignment(HorizontalAlignment.CENTER);
         
@@ -318,7 +333,8 @@ public class Writer_dubg {
 	{
 
 		  FileInputStream inputStream = new FileInputStream(new File(Parameters.getPathToIrekFile()));
-        Workbook workbook = WorkbookFactory.create(inputStream);	     
+		  BufferedInputStream bis = new BufferedInputStream(new FileInputStream(new File(Parameters.getPathToIrekFile())));
+        Workbook workbook = WorkbookFactory.create(bis);	     
         Sheet sheet1 = workbook.getSheetAt(0);       
 		
 		// LastRowWithOldData -> 2672
@@ -336,7 +352,7 @@ public class Writer_dubg {
 	        }
 		}
         
-        inputStream.close();
+				bis.close();
         FileOutputStream outputStream = new FileOutputStream(Parameters.getPathToIrekFile());
         workbook.write(outputStream);
         workbook.close();
@@ -406,7 +422,8 @@ public class Writer_dubg {
     
   	
 		 FileInputStream inputStream = new FileInputStream(new File(Parameters.getPathToIrekFileBackup()));
-		 	Workbook workbook = WorkbookFactory.create(inputStream);
+		 BufferedInputStream bis = new BufferedInputStream(new FileInputStream(new File(Parameters.getPathToIrekFileBackup())));
+		 	Workbook workbook = WorkbookFactory.create(bis);
 		 	Sheet sheet = workbook.getSheetAt(SheetNumeber); 
 
         DataFormatter formatter = new DataFormatter(); 
@@ -473,7 +490,8 @@ public class Writer_dubg {
 		 int SpaceBettwenLastRow = 3;
 		
 		 FileInputStream inputStream = new FileInputStream(new File(Parameters.getPathToIrekFileBackup()));
-		 	Workbook workbook = WorkbookFactory.create(inputStream);
+		 BufferedInputStream bis = new BufferedInputStream(new FileInputStream(new File(Parameters.getPathToIrekFileBackup())));
+		 	Workbook workbook = WorkbookFactory.create(bis);
 		 	Sheet sheet = workbook.getSheetAt(SheetNumeber);
 		
 		 	System.out.println("elements in listofcellinrow: " + ListOfCellsInRow.size());
