@@ -1,0 +1,161 @@
+[33mcommit c60622fbf973b361928fbf533753084831ae3722[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Reflog: HEAD@{0} (1234 <pawliko14@gmail.com>)
+Reflog message: commit: new file: bin/Reader/ExcelReader$IrekExcelColumnName.class
+Author: 1234 <pawliko14@gmail.com>
+Date:   Tue Nov 26 14:48:57 2019 +0100
+
+            new file:   bin/Reader/ExcelReader$IrekExcelColumnName.class
+            new file:   bin/Reader/ExcelReader$IzaExcelColumnName.class
+            new file:   bin/Reader/ExcelReader.class
+            new file:   bin/Reader/excel_object$Builder.class
+            new file:   bin/Reader/excel_object.class
+            new file:   bin/Tests/Read_from_file_tests.class
+            new file:   bin/Writer/Writer.class
+            new file:   bin/Writer/Writer_dubg.class
+            new file:   bin/Writer/Writer_tester.class
+            new file:   bin/main/main.class
+            new file:   bin/parameters/Parameters.class
+            modified:   pom.xml
+            modified:   src/Writer/Writer_dubg.java
+            modified:   target/classes/Writer/Writer_dubg.class
+            modified:   target/classes/main/main.class
+
+[33mcommit 834a648d3ff7e19949ca3faad9fead9d784ccf89[m[33m ([m[1;31morigin/master[m[33m)[m
+Reflog: HEAD@{1} (1234 <pawliko14@gmail.com>)
+Reflog message: reset: moving to head
+Author: 1234 <pawliko14@gmail.com>
+Date:   Tue Nov 26 11:34:30 2019 +0100
+
+            modified:   src/Writer/Writer_dubg.java
+            modified:   src/main/main.java
+            modified:   target/classes/Writer/Writer_dubg.class
+            modified:   target/classes/main/main.class
+
+[33mcommit 834a648d3ff7e19949ca3faad9fead9d784ccf89[m[33m ([m[1;31morigin/master[m[33m)[m
+Reflog: HEAD@{2} (1234 <pawliko14@gmail.com>)
+Reflog message: commit: modified: src/Writer/Writer_dubg.java
+Author: 1234 <pawliko14@gmail.com>
+Date:   Tue Nov 26 11:34:30 2019 +0100
+
+            modified:   src/Writer/Writer_dubg.java
+            modified:   src/main/main.java
+            modified:   target/classes/Writer/Writer_dubg.class
+            modified:   target/classes/main/main.class
+
+[33mcommit dcf59a33601a2aec632cbbdfa472f47e028bbbdc[m
+Reflog: HEAD@{3} (1234 <pawliko14@gmail.com>)
+Reflog message: commit: modified: src/Reader/ExcelReader.java
+Author: 1234 <pawliko14@gmail.com>
+Date:   Mon Nov 25 15:45:47 2019 +0100
+
+            modified:   src/Reader/ExcelReader.java
+            modified:   src/Writer/Writer.java
+            modified:   src/Writer/Writer_dubg.java
+            modified:   src/main/main.java
+            modified:   target/classes/Reader/ExcelReader$IrekExcelColumnName.class
+            new file:   target/classes/Reader/ExcelReader$IzaExcelColumnName.class
+            deleted:    target/classes/Reader/ExcelReader$IzasExcelColumnName.class
+            modified:   target/classes/Reader/ExcelReader.class
+            modified:   target/classes/Tests/Read_from_file_tests.class
+            modified:   target/classes/Writer/Writer.class
+            modified:   target/classes/Writer/Writer_dubg.class
+            modified:   target/classes/main/main.class
+
+[33mcommit d1279d9be4f809f61ff98119f5b628f9ed914773[m
+Reflog: HEAD@{4} (1234 <pawliko14@gmail.com>)
+Reflog message: commit: modified: src/Reader/ExcelReader.java
+Author: 1234 <pawliko14@gmail.com>
+Date:   Mon Nov 25 07:50:27 2019 +0100
+
+            modified:   src/Reader/ExcelReader.java
+            modified:   src/Writer/Writer.java
+            modified:   src/Writer/Writer_dubg.java
+            new file:   src/Writer/Writer_tester.java
+            modified:   src/main/main.java
+            modified:   target/classes/Writer/Writer.class
+            modified:   target/classes/Writer/Writer_dubg.class
+            new file:   target/classes/Writer/Writer_tester.class
+            modified:   target/classes/main/main.class
+
+[33mcommit c867d4fbf427f618020e386712358280b7dfc179[m
+Reflog: HEAD@{5} (1234 <pawliko14@gmail.com>)
+Reflog message: commit: modified: src/Reader/ExcelReader.java
+Author: 1234 <pawliko14@gmail.com>
+Date:   Thu Nov 21 15:28:14 2019 +0100
+
+            modified:   src/Reader/ExcelReader.java
+            modified:   src/Writer/Writer.java
+            new file:   src/Writer/Writer_dubg.java
+            modified:   src/main/main.java
+            modified:   target/classes/Reader/ExcelReader$IrekExcelColumnName.class
+            modified:   target/classes/Reader/ExcelReader$IzasExcelColumnName.class
+            modified:   target/classes/Reader/ExcelReader.class
+            modified:   target/classes/Writer/Writer.class
+            new file:   target/classes/Writer/Writer_dubg.class
+            modified:   target/classes/main/main.class
+
+[33mcommit a88b4d366097fc874de712173583bb941ee4a8cf[m
+Reflog: HEAD@{6} (1234 <pawliko14@gmail.com>)
+Reflog message: commit: modified: src/Reader/ExcelReader.java
+Author: 1234 <pawliko14@gmail.com>
+Date:   Thu Nov 21 13:52:58 2019 +0100
+
+            modified:   src/Reader/ExcelReader.java
+            modified:   src/Writer/Writer.java
+            modified:   src/main/main.java
+            modified:   target/classes/Writer/Writer.class
+            modified:   target/classes/main/main.class
+
+[33mcommit 274bf953deb3c62b6a7383eb65332f0c59b2dbcd[m
+Reflog: HEAD@{7} (1234 <pawliko14@gmail.com>)
+Reflog message: commit: modified: src/Reader/ExcelReader.java
+Author: 1234 <pawliko14@gmail.com>
+Date:   Thu Nov 21 13:10:20 2019 +0100
+
+            modified:   src/Reader/ExcelReader.java
+            modified:   src/Reader/excel_object.java
+            modified:   src/Writer/Writer.java
+            modified:   src/main/main.java
+            modified:   src/parameters/Parameters.java
+            modified:   target/classes/Reader/ExcelReader$IrekExcelColumnName.class
+            modified:   target/classes/Reader/ExcelReader$IzasExcelColumnName.class
+            modified:   target/classes/Reader/ExcelReader.class
+            modified:   target/classes/Reader/excel_object$Builder.class
+            modified:   target/classes/Reader/excel_object.class
+            modified:   target/classes/Writer/Writer.class
+            modified:   target/classes/main/main.class
+            modified:   target/classes/parameters/Parameters.class
+
+[33mcommit 4c62a42be2977b6e034878c098acdd553ba6c41d[m
+Reflog: HEAD@{8} (1234 <pawliko14@gmail.com>)
+Reflog message: commit: modified: src/Writer/Writer.java
+Author: 1234 <pawliko14@gmail.com>
+Date:   Wed Nov 20 14:56:30 2019 +0100
+
+            modified:   src/Writer/Writer.java
+            new file:   src/main/main.java
+            modified:   src/parameters/Parameters.java
+            modified:   target/classes/Writer/Writer.class
+            new file:   target/classes/main/main.class
+            modified:   target/classes/parameters/Parameters.class
+
+[33mcommit 97bb942c2e2201eb6eff2362d24273726001d1f4[m
+Reflog: HEAD@{9} (1234 <pawliko14@gmail.com>)
+Reflog message: commit (initial): new file: pom.xml
+Author: 1234 <pawliko14@gmail.com>
+Date:   Wed Nov 20 14:20:58 2019 +0100
+
+            new file:   pom.xml
+            new file:   src/Reader/ExcelReader.java
+            new file:   src/Reader/excel_object.java
+            new file:   src/Tests/Read_from_file_tests.java
+            new file:   src/Writer/Writer.java
+            new file:   src/parameters/Parameters.java
+            new file:   target/classes/Reader/ExcelReader$IrekExcelColumnName.class
+            new file:   target/classes/Reader/ExcelReader$IzasExcelColumnName.class
+            new file:   target/classes/Reader/ExcelReader.class
+            new file:   target/classes/Reader/excel_object$Builder.class
+            new file:   target/classes/Reader/excel_object.class
+            new file:   target/classes/Tests/Read_from_file_tests.class
+            new file:   target/classes/Writer/Writer.class
+            new file:   target/classes/parameters/Parameters.class

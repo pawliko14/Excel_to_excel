@@ -19,7 +19,6 @@ import java.util.List;
 public class ExcelReader {
 	 
     private  List<excel_object> objects = new ArrayList<>();
-	private boolean OnlyOneRow = false;
 
     public static void main(String[] args) throws IOException, InvalidFormatException {
     	
@@ -186,7 +185,6 @@ public class ExcelReader {
 	        if(SheetHasAnyRecord == 1)
 	        {
 	        	
-	        	System.out.println("OnlyOneRow:");
 	        	biggestValue =  1;
 	        }
 	        else if(SheetHasAnyRecord == 0)
