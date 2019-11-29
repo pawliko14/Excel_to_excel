@@ -1,6 +1,8 @@
 package main;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,6 +18,7 @@ import Writer.Writer;
 import Writer.Writer_dubg;
 import Writer.Writer_tester;
 
+import parameters.Parameters;
 
 /*
  * 
@@ -38,7 +41,12 @@ public class main {
 
 	public static void main(String[] args) throws EncryptedDocumentException, InvalidFormatException, IOException, ParseException {
 	
-	
+		 // Creating a File object that represents the disk file. 
+//        PrintStream o = new PrintStream(new File(Parameters.getPathToLogFile()));  
+//        // Assign o to output stream 
+//        System.setOut(o); 
+//		System.setErr(o);
+  
 		
 		// get all data bettwen 01.12.2018 till now()
 		GetListOfMonth();
